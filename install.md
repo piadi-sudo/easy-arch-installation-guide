@@ -14,7 +14,7 @@ and 5 parts for the actual installation.
 
 4. After just select your usb and the arch iso and click flash
    
-   ![](/home/piadi/coding/arch_install/img/etcher.png)
+   ![](img/etcher.png)
 
 5. Wait till it finish falshing and than the usb is ready to be used
 
@@ -24,7 +24,7 @@ and 5 parts for the actual installation.
 
 7. This is what you should see after booting in
    
-   ![](/home/piadi/coding/arch_install/img/root_archiso.png)
+   ![](img/root_archiso.png)
 
 ## Step 1 |Pre-installation
 
