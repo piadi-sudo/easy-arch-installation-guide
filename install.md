@@ -59,3 +59,87 @@ and 5 parts for the actual installation.
      ```bash
      [iwd] device list  # list all the devices
      ```
+     
+     ///-----
+
+4. Now we are going to partition the disk, we are gonna be using **`gdisk`** 
+   
+   - firstly we need to view the disk we are gonna be partitioning, use te following command to do it:
+     
+     ```bash
+     lsblk
+     ```
+     
+     the result should be something like this (you may have a diffrent label for your disk like 'sda'):
+     
+     ```bash
+     NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+     nvme0n1     259:0    0 931.5G  0 disk 
+     ├─nvme0n1p1 259:1    0     2G  0 part /boot
+     ├─nvme0n1p2 259:2    0    20G  0 part [SWAP]
+     └─nvme0n1p3 259:3    0 909.5G  0 part /
+     ```
+   
+   - now that we know what our disk is we can star partitioning it,
+     in order to do that you have to do the following commands:
+     
+     ```bash
+     gdisk /dev/<name of your device> # gdisk /dev/nvme0n1     
+     ```
+     
+     now you wanna write  **`p`** in order to print all of the current partition,
+     here is an out put example:
+     
+     ```bash
+     Number  Start (sector)    End (sector)  Size       Code  Name
+     1            2048         4196351   2.0 GiB     EF00  EFI system partition
+     2         4196352        46139391   20.0 GiB    8200  Linux swap
+     3        46139392      1953523711   909.5 GiB   8300  Linux filesystem
+     ```
+     
+     if you see them in order to delete the you have to press **`d`** and then
+     write the number of the partition, do it for all of them.
+     Now you should not have any partition left, and we are gonna create some new one's,
+     in order to do so follow these comands:
+     
+     the first one is for the boot
+     
+     write **`n`** to make one partition you are gonna be seeing this promp:
+     
+     ```bash
+     Command (? for help): n
+     Partition number (1-128, default 1): # press enter it is just the partition number
+     ```
+     
+     now we are gonna be selecting the size, this firts command 
+     is gonna be diffrent if you use **`efi`** or **`bios`**
+     
+     1. ## Bios
+        
+        ```bash
+        First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: #press enter     
+        Last sector (1953523712-1953525134, default = 1953525134) or {+-}size{KMGTP}: +2M #for the bios boot     
+        
+        Hex code or GUID (L to show codes, Enter = 8300): ef02 #this is the code to put for bios
+        ```
+     
+     2. ## efi
+        
+        ```bash
+        First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: #press enter               
+        Last sector (1953523712-1953525134, default = 1953525134) or {+-}size{KMGTP}: +2G #for the bios boot      
+        
+        Hex code or GUID (L to show codes, Enter = 8300): EF0O #this is the code to put for bios                  
+        ```
+     
+     now we are going to make the swap partition(you don't relly need to do it
+     if you have more than 16gb of ram) in order to make it do this following commands:
+     
+     ```bash
+     Command (? for help): n
+     Partition number (1-128, default 4): 
+     First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: 
+     Last sector (1953523712-1953525134, default = 1953525134) or {+-}size{KMGTP}:   
+     Current type is 8300 (Linux filesystem)
+     Hex code or GUID (L to show codes, Enter = 8300): ^C
+     ```

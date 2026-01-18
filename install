@@ -1,0 +1,193 @@
+ping archlinux.com
+
+//partition with gdisk
+
+lsblk
+
+gdisk /dev/<name of ssd>
+
+//to remove
+type d and the nubmer of partiton
+
+nstead of creating a BIOS boot partition, create an EFI system partition. Make this a 2GB partition, with type EF00.
+2. When formatting the partition, use command mkfs.fat -F 32 /dev/sda1
+3. When mounting other partitions, also mount your EFI partition, after making a directory /mnt/boot for it.
+4. When generating an fstab file, ensure that your EFI partition is included in the output file.
+5. Before installing GRUB, install efibootmgr with pacman (pacman -S efibootmgr).
+6. When installing the GRUB bootloader, use the command grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+
+//boot
+n for new 
+enter
++2M = if on bios
+code = ef02
+
+
+//swapp
+n 
+enter
++ram / 2 = half ram | ram + halfram
+code = 8200
+
+//root | home
+n
+enter
+live
+code = enter
+
+//finish
+w
+y
+
+
+///make file sistem
+
+mkfs.ext4 /dev/<partizione root | home> -> ext4
+
+
+mkswap /dev/<p swap>
+swapon /dev/<p swap>
+
+
+//if efi
+mkfs.fat -F 32 /dev/sda1 
+
+
+
+///disk mounting
+
+mount /dev/<p root> /mnt
+
+
+
+//mirror
+
+reflector --country IT --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
+
+
+//install the linux kernel
+
+pacstrap -K /mnt base linux linux-firmware base-devel networkmanager vim
+
+
+///chroot
+
+//make fstaba
+
+genfstab -U  /mnt >> /mnt/etc/fstab
+
+cat /mnt/etc/fstab
+
+
+//chroot
+
+arch-chroot /mnt
+
+//info zone
+ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
+
+hwclock --systohc
+
+
+//localization | timezone
+
+vim /etc/locale.gen
+
+locale-gen
+
+en_US.UTF-8
+en_US.ISO-8859-1
+
+//lengage
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+
+//hostname
+echo "<hostname>" >> /etc/hostname
+
+
+//// user | passwd
+
+root pw/
+
+passwd
+
+//add a user
+
+useradd -m -G wheel,users <user>
+passwd <user>
+
+
+
+//enable network at boot
+systemctl enable NetworkManager
+
+
+// boot loader install 
+
+-efi- commnad
+pacman -S efibootmgr
+
+pacman -S grub man-db man-pages
+
+grub-install --target=i386-pc /dev/<nome del ssd>
+
+-efi-
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+-efi-
+
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+//finish
+exit 
+
+//unomount every thing
+umount -R /mnt 
+
+reboot
+
+
+//post installation guide
+
+/to enable sudo on out user
+EDITOR=vim visudo
+
+
+uncomment 
+
+## Uncomment to allow members of group wheel to execute any command
+%wheel ALL=(ALL:ALL) ALL --uncoment this line 
+
+## Same thing without a password
+# %wheel ALL=(ALL:ALL) NOPASSWD: ALL
+
+## Uncomment to allow members of group sudo to execute any command
+# %sudo ALL=(ALL:ALL) ALL
+
+
+//update
+
+sudo pacman -Syu
+
+//download git for yay
+
+sudo pacman -S git
+
+//install yay
+
+git clone https://aur.archlinux.org/yay
+
+cd yay
+
+makepkg -si
+
+//remove the dir if u want
+
+rm -rf yay
+
+
+
+
+
+
