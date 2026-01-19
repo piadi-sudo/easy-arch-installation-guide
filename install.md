@@ -123,7 +123,7 @@ and 5 parts for the actual installation.
         Hex code or GUID (L to show codes, Enter = 8300): ef02 #this is the code to put for bios
         ```
      
-     2. ## efi
+     2. ## Efi
         
         ```bash
         First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: #press enter               
@@ -133,13 +133,33 @@ and 5 parts for the actual installation.
         ```
      
      now we are going to make the swap partition(you don't relly need to do it
-     if you have more than 16gb of ram) in order to make it do this following commands:
+     if you have more than 16gb of ram) to understand the quantity of disk space
+     to allocate you should do this simple calculation:
+     **`<yourRamAmount> / 3 = <DivRam>`** 
+     **`<yourRamAmount> + <DivRam> = swap`**
+     and now in order to make it do this following commands:
      
      ```bash
      Command (? for help): n
-     Partition number (1-128, default 4): 
-     First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: 
-     Last sector (1953523712-1953525134, default = 1953525134) or {+-}size{KMGTP}:   
+     Partition number (2-128, default 2): 
+     First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: #press enter
+     Last sector (1953523712-1953525134, default = 1953525134) or {+-}size{KMGTP}: +<Swap>G #es. +24G
      Current type is 8300 (Linux filesystem)
-     Hex code or GUID (L to show codes, Enter = 8300): ^C
+     Hex code or GUID (L to show codes, Enter = 8300): 8200 #code for swap
      ```
+     
+     now for the last partition we are gonna be doing the root partition,
+     that is gonna be the rest of the disk in order to do it do this following command: 
+     
+     ```bash
+     Command (? for help): n                                                                          
+     Partition number (3-128, default 3):                                                             
+     First sector (1953523712-1953525134, default = 1953523712) or {+-}size{KMGTP}: #press enter 
+     Last sector (1953523712-1953525134, default = 1953525134) or {+-}size{KMGTP}:  #press enter #we use the rest of the disk
+     Current type is 8300 (Linux filesystem)                                                          
+     Hex code or GUID (L to show codes, Enter = 8300): enter # or write 8300
+     ```
+     
+     now that we have finished partitioning we have to save and quit,
+     in order to do so press **`w`** to save and ad the **`[y/n]`**
+     press **`y`** and we are done partitioning.
